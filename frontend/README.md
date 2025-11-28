@@ -1,3 +1,11 @@
+
+###  Curso Coderhouse
+
+**Desarrollo de Aplicaciones**
+
+**Alumno:**
+    CARLOS SALOMON
+    
 # 💍 "CELEBRATE" Wedding Planner App
 
 Aplicación móvil desarrollada en **React Native** para la gestión integral de eventos. Permite a los usuarios organizar bodas, cumpleaños y eventos corporativos, gestionando invitados, presupuestos, proveedores y tareas en tiempo real.
@@ -87,10 +95,3 @@ frontend/
 └── package.json            # Dependencias y scripts del proyecto
  ```
 
-###  Curso Coderhouse
-
-**Desarrollo de Aplicaciones**
-
-**Alumno**
-    ```Carlos Salomon
-    ```
