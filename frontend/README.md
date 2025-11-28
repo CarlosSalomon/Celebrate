@@ -1,4 +1,4 @@
-# 💍 Wedding Planner App
+# 💍 "CELEBRATE" Wedding Planner App
 
 Aplicación móvil desarrollada en **React Native** para la gestión integral de eventos. Permite a los usuarios organizar bodas, cumpleaños y eventos corporativos, gestionando invitados, presupuestos, proveedores y tareas en tiempo real.
 
@@ -63,9 +63,6 @@ El proyecto cumple con la siguiente arquitectura tecnológica:
     ```bash
     npx expo start --clear
     ```
-
-## 📂 Estructura del Proyecto
-
 ## 📂 Estructura del Proyecto
 
 ```text
@@ -88,3 +85,12 @@ frontend/
 ├── App.js                  # Punto de entrada, Navegación y Configuración de Providers
 ├── app.json                # Configuración de Expo (Icono, Splash, Permisos)
 └── package.json            # Dependencias y scripts del proyecto
+ ```
+
+###  Curso Coderhouse
+
+**Desarrollo de Aplicaciones**
+
+**Alumno**
+    ```Carlos Salomon
+    ```
