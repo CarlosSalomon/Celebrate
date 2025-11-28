@@ -35,7 +35,7 @@ El proyecto cumple con la siguiente arquitectura tecnológica:
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone <URL_DE_TU_REPOSITORIO>
+    git clone https://github.com/CarlosSalomon/Celebrate.git
     cd frontend
     ```
 
@@ -65,3 +65,26 @@ El proyecto cumple con la siguiente arquitectura tecnológica:
     ```
 
 ## 📂 Estructura del Proyecto
+
+## 📂 Estructura del Proyecto
+
+```text
+frontend/
+├── assets/                 # Recursos estáticos (Imágenes, Iconos, Fuentes)
+│   └── images/             # Logo y assets gráficos
+├── src/
+│   ├── components/         # Componentes UI reutilizables (Botones, Inputs)
+│   ├── config/             # Configuración de servicios externos (Firebase)
+│   ├── redux/              # Manejo del Estado Global (Redux Toolkit)
+│   │   ├── slices/         # Lógica de estado (Auth, Events)
+│   │   └── store.js        # Configuración del Store
+│   ├── screens/            # Pantallas de la aplicación (Vistas)
+│   │   ├── LoginScreen.jsx
+│   │   ├── HomeScreen.jsx
+│   │   ├── EventBudgetScreen.jsx
+│   │   ├── LocalNotesScreen.jsx
+│   │   └── ... (otras vistas)
+│   └── services/           # Lógica de persistencia local (SQLite)
+├── App.js                  # Punto de entrada, Navegación y Configuración de Providers
+├── app.json                # Configuración de Expo (Icono, Splash, Permisos)
+└── package.json            # Dependencias y scripts del proyecto
