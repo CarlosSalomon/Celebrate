@@ -2,13 +2,9 @@ import React, { useState } from 'react';
 import { Text, TouchableOpacity, StyleSheet, Alert, ScrollView, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
-
-// --- REDUX & FIREBASE ---
 import { useSelector } from 'react-redux';
-import { collection, addDoc } from 'firebase/firestore'; 
+import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
-
-// --- COMPONENTES REUTILIZABLES ---
 import MyInput from '../components/MyInput';
 import MyButton from '../components/MyButton';
 
@@ -16,7 +12,7 @@ export default function CreateEventScreen({ navigation }) {
     const { user } = useSelector((state) => state.auth);
 
     const [name, setName] = useState('');
-    const [eventType, setEventType] = useState('Boda'); 
+    const [eventType, setEventType] = useState('Boda');
     const [budget, setBudget] = useState('');
     const [guestCount, setGuestCount] = useState('');
     const [date, setDate] = useState(new Date());
@@ -59,26 +55,26 @@ export default function CreateEventScreen({ navigation }) {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={{marginBottom: 10}}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginBottom: 10 }}>
                 <Ionicons name="arrow-back" size={24} color="#333" />
             </TouchableOpacity>
 
             <Text style={styles.title}>Nuevo Evento ✨</Text>
 
-            
-            <MyInput 
+
+            <MyInput
                 label="Nombre del Evento"
                 placeholder="Ej: Boda de Ana y Juan"
                 value={name}
                 onChangeText={setName}
             />
-            
+
             <Text style={styles.label}>Tipo de Evento</Text>
             <View style={styles.typeContainer}>
                 {eventTypes.map((type) => (
-                    <TouchableOpacity 
-                        key={type} 
-                        style={[styles.typeBtn, eventType === type && styles.typeBtnSelected]} 
+                    <TouchableOpacity
+                        key={type}
+                        style={[styles.typeBtn, eventType === type && styles.typeBtnSelected]}
                         onPress={() => setEventType(type)}
                     >
                         <Text style={[styles.typeText, eventType === type && styles.typeTextSelected]}>
@@ -94,14 +90,14 @@ export default function CreateEventScreen({ navigation }) {
                 <Ionicons name="calendar-outline" size={20} color="#666" />
             </TouchableOpacity>
             {showPicker && (
-                <DateTimePicker 
-                    value={date} 
-                    mode="date" 
-                    onChange={(e, d) => { setShowPicker(false); if(d) setDate(d); }} 
+                <DateTimePicker
+                    value={date}
+                    mode="date"
+                    onChange={(e, d) => { setShowPicker(false); if (d) setDate(d); }}
                 />
             )}
 
-            <MyInput 
+            <MyInput
                 label="Presupuesto ($)"
                 placeholder="0"
                 keyboardType="numeric"
@@ -109,7 +105,7 @@ export default function CreateEventScreen({ navigation }) {
                 onChangeText={setBudget}
             />
 
-            <MyInput 
+            <MyInput
                 label="Cantidad de Invitados"
                 placeholder="0"
                 keyboardType="numeric"
@@ -117,11 +113,11 @@ export default function CreateEventScreen({ navigation }) {
                 onChangeText={setGuestCount}
             />
 
-            
-            <MyButton 
-                title="CREAR EVENTO" 
-                onPress={handleCreate} 
-                loading={loading} 
+
+            <MyButton
+                title="CREAR EVENTO"
+                onPress={handleCreate}
+                loading={loading}
             />
 
         </ScrollView>

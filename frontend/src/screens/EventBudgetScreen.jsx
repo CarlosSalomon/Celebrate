@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-// --- FIRESTORE IMPORTS ---
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
-// -------------------------
+
 
 export default function EventBudgetScreen({ navigation, route }) {
     const { eventId } = route.params;
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // 1. ESCUCHAR EL EVENTO EN VIVO DESDE FIREBASE
+
     useEffect(() => {
         if (!eventId) return;
         setLoading(true);
 
         const eventRef = doc(db, 'events', eventId);
 
-        // onSnapshot escucha cambios en tiempo real. No necesita userToken.
+
         const unsubscribe = onSnapshot(eventRef, (docSnap) => {
             if (docSnap.exists()) {
                 setEvent({ _id: docSnap.id, ...docSnap.data() });
@@ -36,7 +34,7 @@ export default function EventBudgetScreen({ navigation, route }) {
         return () => unsubscribe();
     }, [eventId]);
 
-    // 2. ELIMINAR UN SERVICIO
+
     const handleDeleteService = (serviceItem) => {
         Alert.alert(
             "Cancelar Contrato",
@@ -49,9 +47,7 @@ export default function EventBudgetScreen({ navigation, route }) {
                     onPress: async () => {
                         try {
                             const eventRef = doc(db, 'events', eventId);
-                            
-                            // Filtramos el array para quitar el elemento
-                            // (Nota: Asegúrate que hiredVendors exista en tu DB, si el evento es nuevo estará vacío)
+
                             const currentVendors = event.hiredVendors || [];
                             const updatedVendors = currentVendors.filter(
                                 v => v.name !== serviceItem.name || v.price !== serviceItem.price
@@ -72,7 +68,7 @@ export default function EventBudgetScreen({ navigation, route }) {
     if (loading) return <View style={styles.center}><ActivityIndicator size="large" color="#FF6B6B" /></View>;
     if (!event) return <View style={styles.center}><Text>Cargando datos...</Text></View>;
 
-    // 3. CÁLCULOS
+
     const totalBudget = event.budget || 0;
     const hiredList = event.hiredVendors || [];
     const totalSpent = hiredList.reduce((acc, item) => acc + item.price, 0);
@@ -91,7 +87,7 @@ export default function EventBudgetScreen({ navigation, route }) {
             <View style={styles.priceInfo}>
                 <Text style={styles.servicePrice}>- ${item.price.toLocaleString()}</Text>
                 <TouchableOpacity onPress={() => handleDeleteService(item)}>
-                    <Ionicons name="trash-outline" size={20} color="#FF6B6B" style={{marginTop: 5, alignSelf: 'flex-end'}} />
+                    <Ionicons name="trash-outline" size={20} color="#FF6B6B" style={{ marginTop: 5, alignSelf: 'flex-end' }} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -107,17 +103,17 @@ export default function EventBudgetScreen({ navigation, route }) {
                 <Text style={styles.title}>Gastos & Contratos</Text>
             </View>
 
-            {/* Tarjeta Financiera */}
+
             <View style={styles.summaryCard}>
                 <Text style={styles.summaryTitle}>Presupuesto Total</Text>
                 <Text style={styles.budgetAmount}>${totalBudget.toLocaleString()}</Text>
 
                 <View style={styles.progressBarBg}>
                     <View style={[
-                        styles.progressBarFill, 
-                        { 
-                            width: `${Math.min(percentage, 100)}%`, 
-                            backgroundColor: remaining < 0 ? '#FF6B6B' : '#4ECDC4' 
+                        styles.progressBarFill,
+                        {
+                            width: `${Math.min(percentage, 100)}%`,
+                            backgroundColor: remaining < 0 ? '#FF6B6B' : '#4ECDC4'
                         }
                     ]} />
                 </View>
@@ -127,7 +123,7 @@ export default function EventBudgetScreen({ navigation, route }) {
                         <Text style={styles.statLabel}>Gastado</Text>
                         <Text style={styles.statValue}>${totalSpent.toLocaleString()}</Text>
                     </View>
-                    <View style={{alignItems: 'flex-end'}}>
+                    <View style={{ alignItems: 'flex-end' }}>
                         <Text style={styles.statLabel}>Disponible</Text>
                         <Text style={[styles.statValue, { color: remaining < 0 ? '#FF6B6B' : 'white' }]}>
                             ${remaining.toLocaleString()}
@@ -136,12 +132,12 @@ export default function EventBudgetScreen({ navigation, route }) {
                 </View>
             </View>
 
-            {/* Lista */}
+
             <View style={styles.listHeader}>
                 <Text style={styles.subtitle}>Servicios Contratados</Text>
-                {/* Botón para ir a Buscar Proveedores */}
-                <TouchableOpacity 
-                    style={styles.addButton} 
+
+                <TouchableOpacity
+                    style={styles.addButton}
                     onPress={() => navigation.navigate('Vendors', { eventId })}
                 >
                     <Text style={styles.addButtonText}>+ Contratar</Text>
@@ -166,7 +162,7 @@ const styles = StyleSheet.create({
     center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     header: { flexDirection: 'row', alignItems: 'center', marginBottom: 20, marginTop: 10 },
     title: { fontSize: 22, fontWeight: 'bold', marginLeft: 15, color: '#333' },
-    
+
     summaryCard: { backgroundColor: '#333', borderRadius: 20, padding: 25, marginBottom: 30, elevation: 5 },
     summaryTitle: { color: '#ccc', fontSize: 14, textTransform: 'uppercase', marginBottom: 5 },
     budgetAmount: { color: 'white', fontSize: 32, fontWeight: 'bold', marginBottom: 20 },
@@ -188,6 +184,6 @@ const styles = StyleSheet.create({
     serviceCategory: { fontSize: 12, color: 'gray' },
     priceInfo: { alignItems: 'flex-end' },
     servicePrice: { fontSize: 14, fontWeight: 'bold', color: '#FF6B6B' },
-    
+
     emptyText: { textAlign: 'center', color: '#999', marginTop: 20 }
 });

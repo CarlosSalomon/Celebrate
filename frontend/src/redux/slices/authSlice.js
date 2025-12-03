@@ -32,17 +32,17 @@ export const authSlice = createSlice({
       state.isAuthenticated = false;
       state.isLoading = false; 
     },
-    // --- NUEVA ACCIÓN AGREGADA ---
+    
     updateUserProfile: (state, action) => {
-        // action.payload traerá algo como { displayName: 'Nuevo Nombre', photoURL: '...' }
+    
         if (state.user) {
             state.user = { ...state.user, ...action.payload };
         }
     }
-    // -----------------------------
+    
   },
 });
 
-// Exportamos la nueva acción para poder usarla
+
 export const { setLoading, loginSuccess, loginFailure, logout, updateUserProfile } = authSlice.actions;
 export default authSlice.reducer;

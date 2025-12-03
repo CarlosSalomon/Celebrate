@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-// --- FIRESTORE IMPORTS ---
 import { 
     collection, 
     addDoc, 
@@ -14,7 +12,7 @@ import {
     updateDoc 
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
-// -------------------------
+
 
 export default function GuestListScreen({ navigation, route }) {
     const { eventId } = route.params || {}; 
@@ -22,23 +20,23 @@ export default function GuestListScreen({ navigation, route }) {
     const [newName, setNewName] = useState('');
     const [loading, setLoading] = useState(true);
 
-    // 1. ESCUCHAR INVITADOS EN TIEMPO REAL
+
     useEffect(() => { 
         if (!eventId) {
             setLoading(false);
             return;
         }
 
-        // Creamos la referencia a la colección 'guests'
+
         const guestsRef = collection(db, 'guests');
         
-        // Query: Traer solo los invitados de ESTE evento
+
         const q = query(guestsRef, where('eventId', '==', eventId));
 
-        // Suscripción
+
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const guestsList = snapshot.docs.map(doc => ({
-                _id: doc.id, // Mapeamos el ID de firestore
+                _id: doc.id,
                 ...doc.data()
             }));
             setGuests(guestsList);
@@ -51,32 +49,32 @@ export default function GuestListScreen({ navigation, route }) {
         return () => unsubscribe();
     }, [eventId]);
 
-    // 2. AGREGAR INVITADO (Create)
+    
     const addGuest = async () => {
         if (!newName.trim()) return;
         
         try {
             await addDoc(collection(db, 'guests'), {
                 name: newName,
-                eventId: eventId, // Vinculamos al evento actual
+                eventId: eventId, 
                 status: 'Pendiente',
                 createdAt: new Date().toISOString()
             });
-            setNewName(''); // Limpiamos el input
+            setNewName(''); 
         } catch (error) {
             Alert.alert("Error", "No se pudo agregar al invitado");
             console.log(error);
         }
     };
 
-    // 3. CAMBIAR ESTADO (Update)
+    
     const toggleStatus = async (item) => {
         const nextStatus = item.status === 'Pendiente' ? 'Confirmado' 
                          : item.status === 'Confirmado' ? 'Rechazado' 
                          : 'Pendiente';
 
         try {
-            // Referencia al documento específico
+    
             const guestRef = doc(db, 'guests', item._id);
             await updateDoc(guestRef, { status: nextStatus });
         } catch (error) { 
@@ -85,7 +83,7 @@ export default function GuestListScreen({ navigation, route }) {
         }
     };
 
-    // 4. ELIMINAR INVITADO (Delete)
+    
     const deleteGuest = (id) => {
         Alert.alert("Eliminar", "¿Borrar a este invitado?", [
             { text: "Cancelar" },
@@ -102,7 +100,7 @@ export default function GuestListScreen({ navigation, route }) {
         ]);
     };
 
-    // Colores según estado
+    
     const getStatusColor = (status) => {
         if (status === 'Confirmado') return '#4CAF50'; // Verde
         if (status === 'Rechazado') return '#F44336';  // Rojo

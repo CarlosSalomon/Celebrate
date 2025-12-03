@@ -12,7 +12,7 @@ const categories = [
 ];
 
 export default function VendorsScreen({ navigation, route }) {
-    const { eventId } = route.params; 
+    const { eventId } = route.params;
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
@@ -42,7 +42,7 @@ export default function VendorsScreen({ navigation, route }) {
                 data={categories}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
-                numColumns={2} // Grilla de 2 columnas
+                numColumns={2}
                 contentContainerStyle={styles.list}
             />
         </View>

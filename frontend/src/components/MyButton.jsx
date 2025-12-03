@@ -36,6 +36,6 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase'
     },
     disabled: {
-        backgroundColor: '#ffb3b3' // Un color más claro cuando carga
+        backgroundColor: '#ffb3b3' 
     }
 });

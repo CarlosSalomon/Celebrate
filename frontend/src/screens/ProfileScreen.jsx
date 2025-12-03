@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-
-// --- REDUX & FIREBASE IMPORTS ---
 import { useSelector, useDispatch } from 'react-redux';
-import { logout, updateUserProfile } from '../redux/slices/authSlice'; // <--- Importamos updateUserProfile
+import { logout, updateUserProfile } from '../redux/slices/authSlice'; 
 import { auth, db } from '../config/firebase';
-import { signOut, updateProfile } from 'firebase/auth'; // <--- Importamos updateProfile
-import { doc, updateDoc } from 'firebase/firestore';    // <--- Importamos Firestore
+import { signOut, updateProfile } from 'firebase/auth'; 
+import { doc, updateDoc } from 'firebase/firestore';    
 
 export default function ProfileScreen({ navigation }) {
     const { user } = useSelector((state) => state.auth);
@@ -31,10 +29,10 @@ export default function ProfileScreen({ navigation }) {
             if (useCamera) {
                 await ImagePicker.requestCameraPermissionsAsync();
                 result = await ImagePicker.launchCameraAsync({
-                    mediaTypes: ['images'], // Actualizado para versiones nuevas de expo
+                    mediaTypes: ['images'], 
                     allowsEditing: true,
                     aspect: [1, 1],
-                    quality: 0.5, // Bajamos calidad para que no pese tanto
+                    quality: 0.5, 
                 });
             } else {
                 result = await ImagePicker.launchImageLibraryAsync({
@@ -47,12 +45,11 @@ export default function ProfileScreen({ navigation }) {
 
             if (!result.canceled) {
                 const newUri = result.assets[0].uri;
-                setImage(newUri); // Actualizar estado local visualmente
+                setImage(newUri); 
 
                 // --- GUARDAR CAMBIOS ---
                 if (auth.currentUser) {
-                    // 1. Actualizar en Firebase Auth (Perfil del usuario)
-                    // Nota: Esto guarda la ruta local del celular. Para producción real se usaría Firebase Storage.
+                    
                     await updateProfile(auth.currentUser, { photoURL: newUri });
 
                     // 2. Actualizar en Firestore (Base de datos)
@@ -95,7 +92,7 @@ export default function ProfileScreen({ navigation }) {
             <View style={styles.profileSection}>
                 <TouchableOpacity onPress={showOptions}>
                     <View style={styles.avatarContainer}>
-                        {/* Prioridad: 1. Imagen recién seleccionada, 2. Foto de Redux/Firebase, 3. Placeholder */}
+                    
                         <Image
                             source={
                                 image 

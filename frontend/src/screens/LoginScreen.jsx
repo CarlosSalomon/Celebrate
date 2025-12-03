@@ -5,10 +5,7 @@ import { auth } from '../config/firebase';
 import { useDispatch } from 'react-redux';
 import { setLoading, loginSuccess, loginFailure } from '../redux/slices/authSlice';
 
-// --- IMPORTAR LOGO ---
-// Nota: Si guardaste tu nuevo diseño como 'icon.jpg', cambia la extensión aquí abajo.
-// Basado en tu árbol de archivos, la ruta es esta:
-const appLogo = require('../../assets/images/icon.png'); 
+const appLogo = require('../../assets/images/icon.png');
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
@@ -56,12 +53,12 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-            
-            
+
+
             <Image source={appLogo} style={styles.logo} />
 
-            
-            
+
+
 
             <TextInput
                 style={styles.input}
@@ -96,12 +93,12 @@ export default function LoginScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#ffffffff' },
-    
-    // ESTILO PARA EL LOGO
+
+
     logo: {
-        width: 300, 
-        height: 300, 
-        alignSelf: 'center', 
+        width: 300,
+        height: 300,
+        alignSelf: 'center',
         marginBottom: 20,
         resizeMode: 'contain'
     },

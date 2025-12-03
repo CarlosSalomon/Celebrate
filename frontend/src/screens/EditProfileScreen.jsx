@@ -1,49 +1,44 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-// --- REDUX & FIREBASE IMPORTS ---
 import { useSelector, useDispatch } from 'react-redux';
-import { updateProfile, updatePassword } from 'firebase/auth'; 
-import { doc, updateDoc } from 'firebase/firestore';         
+import { updateProfile, updatePassword } from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
-
-// IMPORTACIÓN CORREGIDA: Ahora sí existe en authSlice
-import { updateUserProfile } from '../redux/slices/authSlice'; 
+import { updateUserProfile } from '../redux/slices/authSlice';
 
 export default function EditProfileScreen({ navigation }) {
     const { user } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
     const [name, setName] = useState(user?.displayName || '');
-    const [password, setPassword] = useState(''); 
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleUpdate = async () => {
         if (!name.trim()) return Alert.alert("Error", "El nombre no puede estar vacío");
-        
+
         setLoading(true);
         try {
             if (auth.currentUser) {
-                // 1. Actualizar en Firebase Auth (Nube)
+
                 await updateProfile(auth.currentUser, { displayName: name });
-                
-                // 2. Si hay contraseña, actualizarla
+
+
                 if (password.length > 0) {
                     if (password.length < 6) throw new Error("La contraseña debe tener al menos 6 caracteres");
                     await updatePassword(auth.currentUser, password);
                 }
 
-                // 3. Actualizar en Firestore (Base de datos)
+
                 const userRef = doc(db, 'users', user.uid);
-                await updateDoc(userRef, { 
-                    username: name 
+                await updateDoc(userRef, {
+                    username: name
                 });
 
-                // 4. ACTUALIZAR REDUX (Memoria local)
-                // Esto hace que el cambio se vea al instante en la pantalla de Perfil
-                dispatch(updateUserProfile({ 
-                    displayName: name 
+
+                dispatch(updateUserProfile({
+                    displayName: name
                 }));
 
                 Alert.alert("Éxito", "Perfil actualizado correctamente", [
@@ -72,15 +67,15 @@ export default function EditProfileScreen({ navigation }) {
             </View>
 
             <Text style={styles.label}>Nombre Completo</Text>
-            <TextInput 
-                style={styles.input} 
+            <TextInput
+                style={styles.input}
                 value={name}
                 onChangeText={setName}
             />
 
             <Text style={styles.label}>Nueva Contraseña (Opcional)</Text>
-            <TextInput 
-                style={styles.input} 
+            <TextInput
+                style={styles.input}
                 placeholder="Deja vacío para mantener la actual"
                 secureTextEntry
                 value={password}

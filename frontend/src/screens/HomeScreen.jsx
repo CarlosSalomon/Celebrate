@@ -9,51 +9,51 @@ import { setEvents, setEventsLoading } from '../redux/slices/eventSlice';
 
 
 export default function HomeScreen({ navigation }) {
-    
+
     const { user, isOffline } = useSelector((state) => state.auth);
     const { events, loading } = useSelector((state) => state.events);
     const dispatch = useDispatch();
 
-    
+
     useEffect(() => {
         if (!user?.uid) return;
 
-    
+
         if (isOffline) {
-             dispatch(setEvents([{
-                 _id: 'evento_local_1',
-                 name: 'Borrador Local (Sin Internet)',
-                 date: new Date().toISOString(),
-                 userId: 'local_user'
-             }]));
-             return;
+            dispatch(setEvents([{
+                _id: 'evento_local_1',
+                name: 'Borrador Local (Sin Internet)',
+                date: new Date().toISOString(),
+                userId: 'local_user'
+            }]));
+            return;
         }
 
         dispatch(setEventsLoading());
 
-    
+
         const eventsRef = collection(db, "events");
-        
-    
+
+
         const q = query(eventsRef, where("userId", "==", user.uid));
 
-    
+
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const loadedEvents = snapshot.docs.map(doc => ({
-                _id: doc.id, // Firestore usa .id
+                _id: doc.id,
                 ...doc.data()
             }));
-            
-            // Ordenar por fecha (descendente) en el cliente
+
+
             loadedEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             dispatch(setEvents(loadedEvents));
         }, (error) => {
-             console.error("Error fetching events:", error);
-             // Opcional: manejar el error en redux
+            console.error("Error fetching events:", error);
+
         });
 
-        // Limpiar suscripción al salir
+
         return () => unsubscribe();
     }, [user, isOffline, dispatch]);
 
@@ -118,17 +118,17 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.container}>
             <View style={styles.header}>
                 <View>
-                    
-                    
-                    
+
+
+
                     <Text style={styles.greeting}>
                         Hola, {user?.displayName ? user.displayName.split(' ')[0] : 'Usuario'} 👋
                     </Text>
                     <Text style={styles.subGreeting}>Tus Eventos</Text>
                 </View>
-                
-                {/* Icono de Perfil a la derecha */}
-                <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={{marginTop: 10}}>
+
+
+                <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={{ marginTop: 10 }}>
                     <Ionicons name="person-circle-outline" size={45} color="#333" />
                 </TouchableOpacity>
             </View>
@@ -159,12 +159,12 @@ export default function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#f9f9f9', padding: 20 },
-    // Ajustamos alignItems a 'flex-start' para que el icono de perfil se alinee arriba
+
     header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20, marginTop: 15 },
-    
-    // NUEVO ESTILO PARA EL LOGO
+
+
     headerLogo: { width: 100, height: 80, resizeMode: 'contain', marginBottom: 5 },
-    
+
     greeting: { fontSize: 26, fontWeight: 'bold', color: '#333' },
     subGreeting: { fontSize: 16, color: '#666' },
     card: { backgroundColor: 'white', borderRadius: 15, padding: 20, marginBottom: 20, elevation: 3 },

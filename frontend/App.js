@@ -1,19 +1,14 @@
-// frontend/App.js
 import React, { useEffect } from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
-// REDUX & FIREBASE
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { store } from './src/redux/store';
 import { loginSuccess, logout } from './src/redux/slices/authSlice';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from './src/config/firebase'; // <--- IMPORTANTE: Importar 'db'
-import { doc, getDoc } from 'firebase/firestore';  // <--- IMPORTANTE: Importar 'doc' y 'getDoc'
-
-// PANTALLAS
+import { auth, db } from './src/config/firebase'; 
+import { doc, getDoc } from 'firebase/firestore'; 
 import CreateEventScreen from './src/screens/CreateEventScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
@@ -43,40 +38,34 @@ const AppNav = () => {
         console.log("🟢 Usuario detectado (Auth):", user.email);
 
         try {
-            // 1. Obtenemos el token
-            const token = await user.getIdToken();
 
-            // 2. TRUCO: Buscamos los datos frescos en FIRESTORE
-            // (Porque Auth a veces tiene datos viejos o cacheados)
+            const token = await user.getIdToken();
             const userDocRef = doc(db, 'users', user.uid);
             const userSnap = await getDoc(userDocRef);
 
             let finalUserData = {
                 uid: user.uid,
                 email: user.email,
-                displayName: user.displayName, // Valor por defecto de Auth
-                photoURL: user.photoURL        // Valor por defecto de Auth
+                displayName: user.displayName, 
+                photoURL: user.photoURL        
             };
 
             if (userSnap.exists()) {
                 const firestoreData = userSnap.data();
                 console.log("📂 Datos encontrados en Firestore:", firestoreData);
-                
-                // Sobrescribimos con lo que hay en la base de datos
-                // Nota: En Register guardamos el nombre como 'username', lo mapeamos a displayName
+                               
                 finalUserData.displayName = firestoreData.username || user.displayName;
                 finalUserData.photoURL = firestoreData.photoURL || user.photoURL;
             }
 
-            // 3. Guardamos en Redux la versión combinada y correcta
-            dispatch(loginSuccess({
+             dispatch(loginSuccess({
                 user: finalUserData,
                 token: token
             }));
 
         } catch (e) {
             console.error("Error obteniendo datos del usuario:", e);
-            // Si falla la DB, al menos logueamos con lo básico
+
             dispatch(logout());
         }
       } else {

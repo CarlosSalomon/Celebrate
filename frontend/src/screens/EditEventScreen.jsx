@@ -2,29 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { Text, TouchableOpacity, StyleSheet, Alert, ScrollView, View, ActivityIndicator } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
-
-// --- FIRESTORE IMPORTS ---
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
-
-// --- COMPONENTES REUTILIZABLES ---
 import MyInput from '../components/MyInput';
 import MyButton from '../components/MyButton';
 
 export default function EditEventScreen({ navigation, route }) {
-    const { eventId } = route.params; // Recibimos el ID del evento a editar
+    const { eventId } = route.params;
 
     const [name, setName] = useState('');
     const [eventType, setEventType] = useState('Boda');
     const [budget, setBudget] = useState('');
     const [guestCount, setGuestCount] = useState('');
     const [date, setDate] = useState(new Date());
-    
+
     const [showPicker, setShowPicker] = useState(false);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
-    // 1. CARGAR DATOS DEL EVENTO AL INICIAR
+
     useEffect(() => {
         const fetchEventData = async () => {
             try {
@@ -37,7 +33,7 @@ export default function EditEventScreen({ navigation, route }) {
                     setEventType(data.eventType);
                     setBudget(data.budget.toString());
                     setGuestCount(data.guestCount.toString());
-                    setDate(new Date(data.date)); // Convertimos string ISO a objeto Date
+                    setDate(new Date(data.date));
                 } else {
                     Alert.alert("Error", "El evento no existe");
                     navigation.goBack();
@@ -53,7 +49,7 @@ export default function EditEventScreen({ navigation, route }) {
         fetchEventData();
     }, [eventId]);
 
-    // 2. GUARDAR CAMBIOS (UPDATE)
+
     const handleUpdate = async () => {
         if (!name || !budget) {
             return Alert.alert("Faltan datos", "Nombre y presupuesto son obligatorios.");
@@ -72,7 +68,7 @@ export default function EditEventScreen({ navigation, route }) {
             });
 
             Alert.alert("¡Éxito!", "Evento actualizado correctamente.");
-            navigation.goBack(); // Volver al Home
+            navigation.goBack();
 
         } catch (error) {
             console.error("Error actualizando:", error);
@@ -102,7 +98,7 @@ export default function EditEventScreen({ navigation, route }) {
                 <Text style={styles.title}>Editar Evento ✏️</Text>
             </View>
 
-            <MyInput 
+            <MyInput
                 label="Nombre del Evento"
                 value={name}
                 onChangeText={setName}
@@ -136,24 +132,24 @@ export default function EditEventScreen({ navigation, route }) {
                 />
             )}
 
-            <MyInput 
+            <MyInput
                 label="Presupuesto ($)"
                 keyboardType="numeric"
                 value={budget}
                 onChangeText={setBudget}
             />
 
-            <MyInput 
+            <MyInput
                 label="Cantidad de Invitados"
                 keyboardType="numeric"
                 value={guestCount}
                 onChangeText={setGuestCount}
             />
 
-            <MyButton 
-                title="GUARDAR CAMBIOS" 
-                onPress={handleUpdate} 
-                loading={saving} 
+            <MyButton
+                title="GUARDAR CAMBIOS"
+                onPress={handleUpdate}
+                loading={saving}
             />
 
         </ScrollView>
@@ -166,13 +162,13 @@ const styles = StyleSheet.create({
     header: { flexDirection: 'row', alignItems: 'center', marginBottom: 20, marginTop: 10 },
     title: { fontSize: 24, fontWeight: 'bold', marginLeft: 15, color: '#333' },
     label: { marginBottom: 8, fontWeight: 'bold', color: '#555', fontSize: 14, textTransform: 'uppercase' },
-    
+
     typeContainer: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 15 },
     typeBtn: { paddingVertical: 8, paddingHorizontal: 15, borderRadius: 20, borderWidth: 1, borderColor: '#ddd', marginRight: 10, marginBottom: 10, backgroundColor: '#fff' },
     typeBtnSelected: { backgroundColor: '#333', borderColor: '#333' },
     typeText: { color: '#666', fontSize: 14 },
     typeTextSelected: { color: 'white', fontWeight: 'bold' },
-    
+
     dateBtn: { flexDirection: 'row', justifyContent: 'space-between', padding: 15, backgroundColor: '#f9f9f9', borderRadius: 10, marginBottom: 20, borderWidth: 1, borderColor: '#eee', alignItems: 'center' },
     dateText: { fontSize: 16, color: '#333' },
 });
